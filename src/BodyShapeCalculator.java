@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class BodyShapeCalculator {
     // Measurements
     private double bust;
@@ -6,12 +8,32 @@ public class BodyShapeCalculator {
     // Body shape result
     private String bodyShape;
 
-    // Constructor
-    public BodyShapeCalculator(double bust, double waist, double hips) {
+    // Constructor is private because addNewMeasurements can only be used within the
+    private BodyShapeCalculator(double bust, double waist, double hips) {
         this.bust = bust;
         this.waist = waist;
         this.hips = hips;
         this.bodyShape = calculateBodyShape();
+    }
+
+    // Static method to add new measurements and return a new BodyShapeCalculator object
+    public static BodyShapeCalculator addNewMeasurements() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter your bust measurement in inches: ");
+        double bust = scanner.nextDouble();
+        scanner.nextLine();
+
+        System.out.println("Enter your waist measurement in inches: ");
+        double waist = scanner.nextDouble();
+        scanner.nextLine();
+
+        System.out.println("Enter your hips measurement in inches: ");
+        double hips = scanner.nextDouble();
+        scanner.nextLine();
+        System.out.println();
+
+        return new BodyShapeCalculator(bust, waist, hips);
     }
 
     // Calculate body shape based on bust, waist, and hips.
@@ -20,14 +42,15 @@ public class BodyShapeCalculator {
             return "Hourglass";
         } else if (bust > hips + 6 && waist < bust * 0.9) {
             return "Inverted Triangle";
-        } else if (hips > bust && waist < hips) {
-            return "Pear";
-        } else if (bust > hips && waist > hips * 0.9) {
-            return "Apple";
-        } else if (Math.abs(bust - waist) <= 2 && Math.abs(waist - hips) <= 2) {
-            return "Rectangle";
         }
-        return "Spongebob";
+//        else if (hips > bust && waist < hips) {
+//            return "Pear";
+//        } else if (bust > hips && waist > hips * 0.9) {
+//            return "Apple";
+//        } else if (Math.abs(bust - waist) <= 2 && Math.abs(waist - hips) <= 2) {
+//            return "Rectangle";
+//        }
+        return "Invalid body shape";
     }
 
 
