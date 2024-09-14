@@ -3,12 +3,33 @@ import java.util.List;
 import java.util.Scanner;
 
 public class InvertedTriangleClothes extends ClothingRecommender {
-
     private final List<String> shoppingList = new ArrayList<>();
     private final Scanner scanner = new Scanner(System.in);
 
+    // Method for choosing long-sleeved top with color and neckline
+    private String longSleevedTop() {
+        System.out.println("::TOPS::");
+        System.out.println("1 x long-sleeved top. Black or white?");
+        String topColor = scanner.nextLine().trim();
+        System.out.println("1 x " + topColor + " long-sleeved top");
+        System.out.println();
+        System.out.println("Choose the neckline. Enter 1/2/3");
+
+        List<String> necklines = getLongSleevedTopsNeckline();
+        for (int i = 0; i < necklines.size(); i++) {
+            System.out.println((i + 1) + ". " + necklines.get(i));
+        }
+
+        int choice = getValidatedChoice(necklines.size());
+        String neckline = (choice != -1) ? necklines.get(choice - 1) : necklines.get(0); // Default to first option if invalid choice
+
+        String longSleevedTop = "1 x " + neckline + " " + topColor + " long-sleeved top";
+        System.out.println(longSleevedTop);
+        return longSleevedTop;
+    }
+
     @Override
-    public List<String> getLongSleevedTops() {
+    public List<String> getLongSleevedTopsNeckline() {
         List<String> tops = new ArrayList<>();
         tops.add("V-neck");
         tops.add("Cowl neck");
@@ -16,8 +37,25 @@ public class InvertedTriangleClothes extends ClothingRecommender {
         return tops;
     }
 
+    // Method for choosing tailored pants
+    private String tailoredPants() {
+        System.out.println();
+        System.out.println("::BOTTOM::");
+        System.out.println("1 x tailored black pants. Choose one:");
+        List<String> pants = getTailoredBlackPantsCut();
+        for (int i = 0; i < pants.size(); i++) {
+            System.out.println((i + 1) + ". " + pants.get(i));
+        }
+
+        int choice = getValidatedChoice(pants.size());
+        String pantChoice = (choice != -1) ? pants.get(choice - 1) : pants.get(0); // Default to first option if invalid choice
+        System.out.println("1 x " + pantChoice + " tailored black pants");
+        System.out.println();
+        return "1 x " + pantChoice + " tailored black pants";
+    }
+
     @Override
-    public List<String> getTailoredBlackPants() {
+    public List<String> getTailoredBlackPantsCut() {
         List<String> pants = new ArrayList<>();
         pants.add("Straight cut");
         pants.add("Boot cut");
@@ -26,76 +64,120 @@ public class InvertedTriangleClothes extends ClothingRecommender {
         return pants;
     }
 
-    @Override
-    public List<String> getNecklineTypes() {
-        return getLongSleevedTops();
+    // Method for adding items to shopping list
+    public void addItemToShoppingList(String item) {
+        shoppingList.add(item);
+        System.out.println(item + " has been added to your shopping list.");
     }
 
-    @Override
-    public void chooseClothing() {
-        chooseLongSleevedTop();
-        chooseTailoredPants();
-        // You can add more clothing choices here if needed
-    }
-
-    // Method to ask for top color and neckline, then add to shoppingList
-    public void chooseLongSleevedTop() {
-        // Choose color
-        System.out.println("1 x long-sleeved top. Black or white?");
-        String longSleevedTopColor = scanner.nextLine().trim();
-
-        // Choose neckline
-        System.out.println("Choose the neckline:");
-        System.out.println("1. V-neck");
-        System.out.println("2. Cowl neck");
-        System.out.println("3. Scoop neck");
-
-        int necklineChoice; // Default invalid value
-
-        if (scanner.hasNextInt()) {
-            necklineChoice = scanner.nextInt();
-            scanner.nextLine(); // Consume the newline
-
-            String neckline;
-            if (necklineChoice == 1) {
-                neckline = "V-neck";
-            } else if (necklineChoice == 2) {
-                neckline = "Cowl neck";
-            } else if (necklineChoice == 3) {
-                neckline = "Scoop neck";
-            } else {
-                System.out.println("Invalid choice. Please select a number between 1 and 3.");
-                return; // Exit the method to avoid adding invalid choices
-            }
-
-            // Add choice to shopping list
-            shoppingList.add("1 x " + longSleevedTopColor + " long-sleeved top with " + neckline);
+    // Method for removing items from shopping list
+    public void removeItemFromShoppingList(String item) {
+        if (shoppingList.remove(item)) {
+            System.out.println(item + " has been removed from your shopping list.");
         } else {
-            System.out.println("Invalid input. Please enter a number.");
-            scanner.nextLine(); // Clear the invalid input
+            System.out.println(item + " was not found in your shopping list.");
         }
     }
 
-    // Method to ask for pants cut and add to shoppingList
-    public void chooseTailoredPants() {
-        System.out.println("1 x tailored black pants. Choose one:");
-        List<String> pants = getTailoredBlackPants();
-        for (int i = 0; i < pants.size(); i++) {
-            System.out.println((i + 1) + ". " + pants.get(i));
+    // Method for updating an item in shopping list
+    public void updateShoppingListItem() {
+        System.out.println("Enter the item to update:");
+        String oldItem = scanner.nextLine();
+        if (shoppingList.contains(oldItem)) {
+            System.out.println("Enter the new item:");
+            String newItem = scanner.nextLine();
+            int index = shoppingList.indexOf(oldItem);
+            shoppingList.set(index, newItem);
+            System.out.println("Item updated to: " + newItem);
+        } else {
+            System.out.println("Item not found in the shopping list.");
         }
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume the newline
-        String pantChoice = pants.get(choice - 1);
-
-        // Add choice to shopping list
-        shoppingList.add("1 x " + pantChoice + " tailored black pants");
     }
 
-    // Method to display the shopping list
-    public void displayShoppingList() {
-        System.out.println("Your capsule wardrobe shopping list:");
+    // Method for viewing current items in shopping list
+    public void viewShoppingList() {
+        System.out.println("\uD83E\uDDFA Your current capsule wardrobe shopping list:");
         for (String item : shoppingList) {
             System.out.println(item);
         }
+    }
+
+    // Method for validating the user's choice
+    private int getValidatedChoice(int maxOptions) {
+        int choice = -1;
+        if (scanner.hasNextInt()) {
+            choice = scanner.nextInt();
+            scanner.nextLine(); // Consume the newline
+            if (choice < 1 || choice > maxOptions) {
+                System.out.println("Invalid choice. Defaulting to first option.");
+                choice = 1;
+            }
+        } else {
+            System.out.println("Invalid input. Defaulting to first option.");
+            scanner.nextLine(); // Clear the invalid input
+        }
+        return choice;
+    }
+
+    // Method for editing the shopping list
+    private void editShoppingList() {
+        while (true) {
+            System.out.println("\uFE0F Would you like to edit your shopping list?");
+            System.out.println("1. Add an item");
+            System.out.println("2. Remove an item");
+            System.out.println("3. Update an item");
+            System.out.println("4. View shopping list");
+            System.out.println("5. Exit editing");
+            System.out.print("Enter your choice: ");
+            int choice = getValidatedChoice(5);
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter the item to add: ");
+                    String addItem = scanner.nextLine();
+                    addItemToShoppingList(addItem);
+                    break;
+                case 2:
+                    System.out.print("Enter the item to remove: ");
+                    String removeItem = scanner.nextLine();
+                    removeItemFromShoppingList(removeItem);
+                    break;
+                case 3:
+                    updateShoppingListItem();
+                    break;
+                case 4:
+                    viewShoppingList();
+                    break;
+                case 5:
+                    return; // Exit editing
+            }
+        }
+    }
+
+    // This method now handles selecting both the long-sleeved top and the tailored pants
+    @Override
+    public void addToShoppingList() {
+        // Add long-sleeved top
+        String longSleevedTop = longSleevedTop();
+        shoppingList.add(longSleevedTop);
+
+        // Add tailored pants
+        String tailoredPants = tailoredPants();
+        shoppingList.add(tailoredPants);
+
+        // Display the final shopping list
+        displayShoppingList();
+
+        // Allow user to edit the shopping list
+        editShoppingList();
+    }
+
+    // Display the shopping list
+    private void displayShoppingList() {
+        System.out.println("\uD83E\uDDFA Your capsule wardrobe shopping list:");
+        for (String item : shoppingList) {
+            System.out.println(item);
+        }
+        System.out.println();
     }
 }

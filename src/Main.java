@@ -5,15 +5,10 @@ public class Main {
     private static BodyShapeCalculator calculator;
 
     public static void displayBodyShape() {
-        if (calculator == null) {
-            System.out.println("No measurements available. Please add measurements first.");
-            return;
-        }
-
         String bodyShape = calculator.getBodyShape();
         System.out.println("Your body shape is: " + bodyShape);
+        System.out.println("Let's work on your shopping list! ");
         System.out.println();
-        System.out.println("The recommended shopping list: ");
     }
 
     public static void displayRecommendations() {
@@ -23,10 +18,10 @@ public class Main {
         }
 
         String bodyShape = calculator.getBodyShape();
-        ClothingRecommender recommender;
+        ClothingRecommender recommender = null;
 
         if (bodyShape.equals("Inverted Triangle")) {
-            recommender = new InvertedTriangleClothes();
+            recommender = new InvertedTriangleClothes(); // Instantiate without overriding
         } else if (bodyShape.equals("Hourglass")) {
             recommender = new HourglassClothes();
         } else {
@@ -34,27 +29,20 @@ public class Main {
             return;
         }
 
-        // Call the method to choose clothing items
-        chooseClothing((InvertedTriangleClothes) recommender); // Cast to specific type if necessary
-    }
-
-    private static void chooseClothing(InvertedTriangleClothes recommender) {
-        recommender.chooseLongSleevedTop();
-        recommender.chooseTailoredPants();
-        recommender.displayShoppingList();
+        recommender.addToShoppingList(); // Call the method to display recommendations
     }
 
     public static void main(String[] args) {
-        do {
+        while (true) {
             int choice = displayMenu();
             if (choice == 1) {
-                calculator = BodyShapeCalculator.addNewMeasurements();  // Moved measurement collection to the BodyShapeCalculator class
+                calculator = BodyShapeCalculator.addNewMeasurements();
                 displayBodyShape();
                 displayRecommendations();
             } else if (choice == 2) {
                 break;  // Exit the loop and end the program
             }
-        } while (true);
+        }
     }
 
     private static int displayMenu() {
@@ -69,7 +57,7 @@ public class Main {
             System.out.println("2. Exit");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
-            scanner.nextLine();
+            scanner.nextLine(); // Consume the newline
             if (choice >= 1 && choice <= 2) {
                 break;
             } else {
