@@ -9,9 +9,16 @@ public class InvertedTriangleClothes extends ClothingRecommender {
     // Method for choosing long-sleeved top with color and neckline
     private String longSleevedTop() {
         System.out.println("::TOPS::");
-        System.out.println("1 x long-sleeved top. Black or white?");
-        String topColor = scanner.nextLine().trim();
-        System.out.println("1 x " + topColor + " long-sleeved top");
+        String topColor;
+        while (true) {
+            System.out.println("1 x long-sleeved top. Black or white?");
+            topColor = scanner.nextLine().trim().toLowerCase();
+            if (topColor.equals("black") || topColor.equals("white")) {
+                break;
+            } else {
+                System.out.println("Invalid color. Please enter 'black' or 'white'.");
+            }
+        }
         System.out.println();
         System.out.println("Choose the neckline. Enter 1/2/3");
 
@@ -64,13 +71,12 @@ public class InvertedTriangleClothes extends ClothingRecommender {
         return pants;
     }
 
-    // Method for adding items to shopping list
+  // CRUD
     public void addItemToShoppingList(String item) {
         shoppingList.add(item);
         System.out.println(item + " has been added to your shopping list.");
     }
 
-    // Method for removing items from shopping list
     public void removeItemFromShoppingList(String item) {
         if (shoppingList.remove(item)) {
             System.out.println(item + " has been removed from your shopping list.");
@@ -79,7 +85,6 @@ public class InvertedTriangleClothes extends ClothingRecommender {
         }
     }
 
-    // Method for updating an item in shopping list
     public void updateShoppingListItem() {
         System.out.println("Enter the item to update:");
         String oldItem = scanner.nextLine();
@@ -94,7 +99,6 @@ public class InvertedTriangleClothes extends ClothingRecommender {
         }
     }
 
-    // Method for viewing current items in shopping list
     public void viewShoppingList() {
         System.out.println("\uD83E\uDDFA Your current capsule wardrobe shopping list:");
         for (String item : shoppingList) {
@@ -102,26 +106,28 @@ public class InvertedTriangleClothes extends ClothingRecommender {
         }
     }
 
-    // Method for validating the user's choice
     private int getValidatedChoice(int maxOptions) {
         int choice = -1;
-        if (scanner.hasNextInt()) {
-            choice = scanner.nextInt();
-            scanner.nextLine(); // Consume the newline
-            if (choice < 1 || choice > maxOptions) {
-                System.out.println("Invalid choice. Defaulting to first option.");
-                choice = 1;
+        while (true) {
+            if (scanner.hasNextInt()) {
+                choice = scanner.nextInt();
+                scanner.nextLine();
+                if (choice >= 1 && choice <= maxOptions) {
+                    return choice;
+                } else {
+                    System.out.println("Invalid choice. Please enter a number between 1 and " + maxOptions + ".");
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine();
             }
-        } else {
-            System.out.println("Invalid input. Defaulting to first option.");
-            scanner.nextLine(); // Clear the invalid input
         }
-        return choice;
     }
 
-    // Method for editing the shopping list
+
     private void editShoppingList() {
         while (true) {
+            System.out.println();
             System.out.println("\uFE0F Would you like to edit your shopping list?");
             System.out.println("1. Add an item");
             System.out.println("2. Remove an item");
@@ -149,7 +155,7 @@ public class InvertedTriangleClothes extends ClothingRecommender {
                     viewShoppingList();
                     break;
                 case 5:
-                    return; // Exit editing
+                    return;
             }
         }
     }

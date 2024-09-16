@@ -71,7 +71,7 @@ public class BodyShapeCalculator {
         return bodyShape;
     }
 
-    // Setters
+    // Setters. Currently not used until the user wants to edit her measurements.
     public void setBust(double bust) {
         if (bust >= 0 ) {
             this.bust = bust;
