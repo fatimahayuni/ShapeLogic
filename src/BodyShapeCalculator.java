@@ -8,6 +8,10 @@ public class BodyShapeCalculator {
     // Body shape result
     private String bodyShape;
 
+    // Default constructor
+    private BodyShapeCalculator() {
+    }
+
     // Constructor is private because addNewMeasurements can only be used within the
     private BodyShapeCalculator(double bust, double waist, double hips) {
         this.bust = bust;
